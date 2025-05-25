@@ -1,0 +1,7 @@
+pandas 
+langchain-groq 
+langchain-community
+langchain
+python-dotenv
+huggingface-hub
+faiss-cpu
