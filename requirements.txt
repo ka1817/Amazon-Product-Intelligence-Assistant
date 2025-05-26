@@ -5,3 +5,6 @@ langchain
 python-dotenv
 huggingface-hub
 faiss-cpu
+fastapi
+python-multipart
+pydantic

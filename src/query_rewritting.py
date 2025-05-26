@@ -2,17 +2,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import os
-from langchain_groq import ChatGroq 
+from langchain_groq import ChatGroq
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain_core.output_parsers import StrOutputParser
 
-GROQ_API_KEY = os.getenv('GROQ_API_KEY')
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 def query_rewriting(query: str) -> str:
-    llm = ChatGroq(api_key=GROQ_API_KEY, model='gemma2-9b-it')
+    llm = ChatGroq(api_key=GROQ_API_KEY, model="gemma2-9b-it")
 
-    query_rewriting_prompt = PromptTemplate(
+    prompt = PromptTemplate(
         input_variables=["query"],
         template="""
 You are an expert in information retrieval. Your task is to refine the given query to make it **clear, specific, and precise** for searching in a **vector database**.  
@@ -29,9 +29,7 @@ You are an expert in information retrieval. Your task is to refine the given que
 ### **Rewritten Query:**  
 """
     )
-    chain = query_rewriting_prompt | llm | StrOutputParser()
-    result = chain.invoke({"query": query})
-    print(result)
-    return result
 
+    chain = prompt | llm | StrOutputParser()
+    return chain.invoke({"query": query})
     

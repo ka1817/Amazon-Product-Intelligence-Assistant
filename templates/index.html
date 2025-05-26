@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Amazon Product QA</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Amazon Product QA</h1>
+        <form method="post" action="/query">
+            <input type="text" name="query" placeholder="Enter your question..." required>
+            <button type="submit">Ask</button>
+        </form>
+
+        {% if query %}
+            <h2>Query:</h2>
+            <p>{{ query }}</p>
+
+            <h2>Answer:</h2>
+            <p>{{ answer }}</p>
+
+            {% if sources %}
+                <h3>Sources:</h3>
+                <ul>
+                    {% for src in sources %}
+                        <li>{{ src }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
