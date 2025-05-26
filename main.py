@@ -2,43 +2,30 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from src.retrival_genaration import retrival_genaration
-from src.data_ingestion import data_ingestion
-from src.data_preprocess import data_preprocess
 
-app = FastAPI(
-    title="Amazon Product QA API",
-    description="Query Amazon product data using LangChain, FAISS, and GROQ.",
-    version="1.0"
-)
+from src.retrival_genaration import ingestdata, generation, query_rewriting
 
-# Mount static and template folders
+app = FastAPI()
+
+# Mount static and templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+# Load vectorstore and chain at startup
+vstore = ingestdata()
+chain = generation(vstore)
 
 @app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+async def get_form(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request, "response": None})
 
-
-@app.post("/query", response_class=HTMLResponse)
-async def query(request: Request, query: str = Form(...)):
-    try:
-        result = retrival_genaration(query)
-        answer = result
-
-        return templates.TemplateResponse("index.html", {
-            "request": request,
-            "query": query,
-            "answer": answer,
-        })
-
-    except Exception as e:
-        return templates.TemplateResponse("index.html", {
-            "request": request,
-            "query": query,
-            "answer": f"An error occurred: {str(e)}",
-           
-        })
-
+@app.post("/", response_class=HTMLResponse)
+async def handle_query(request: Request, user_query: str = Form(...)):
+    rewritten = query_rewriting(user_query)
+    result = chain.invoke(rewritten)
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "response": result,
+        "original_query": user_query,
+        "rewritten_query": rewritten
+    })

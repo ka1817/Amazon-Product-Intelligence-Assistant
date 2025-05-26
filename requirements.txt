@@ -4,7 +4,11 @@ langchain-community
 langchain
 python-dotenv
 huggingface-hub
+sentence_transformers
 faiss-cpu
 fastapi
 python-multipart
 pydantic
+uvicorn[standard]
+jinja2
+
