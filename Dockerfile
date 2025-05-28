@@ -1,42 +1,46 @@
-# ----------------------
-# Stage 1: Build stage
-# ----------------------
+# Stage 1: Build dependencies
 FROM python:3.11-slim AS builder
 
-# Set working directory
+# Install build dependencies only for building wheels
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
+    libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends build-essential && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements and build Python wheels
+# Upgrade pip and install requirements in a venv
 COPY requirements.txt .
-RUN pip install --upgrade pip
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /wheels -r requirements.txt
+RUN python -m venv /venv && \
+    . /venv/bin/activate && \
+    pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# ------------------------
-# Stage 2: Production stage
-# ------------------------
+# Stage 2: Minimal runtime image
 FROM python:3.11-slim
 
+ENV VIRTUAL_ENV=/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Create a non-root user (optional for security)
+RUN useradd -m appuser
+
+# Copy virtual environment from builder
+COPY --from=builder /venv /venv
+
 # Set working directory
 WORKDIR /app
 
-# Copy wheels and requirements
-COPY --from=builder /wheels /wheels
-COPY --from=builder /app/requirements.txt .
-
-# Install Python packages from wheels
-RUN pip install --no-cache-dir /wheels/*
-
-# Copy source code
+# Copy application source code
 COPY . .
 
-# Expose FastAPI default port
+# Use non-root user (optional for better security)
+USER appuser
+
 EXPOSE 8000
 
-# Run the app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 

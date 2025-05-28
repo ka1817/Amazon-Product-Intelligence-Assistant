@@ -2,9 +2,8 @@ pandas
 langchain-groq 
 langchain-community
 langchain
+langchain-huggingface
 python-dotenv
-huggingface-hub
-sentence_transformers
 faiss-cpu
 fastapi
 python-multipart

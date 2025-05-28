@@ -21,7 +21,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 def ingestdata():
     docs = data_preprocess()
-    embedding_model = HuggingFaceEmbeddings()
+    embedding_model = HuggingFaceEmbeddings(model_name="thenlper/gte-small")
     vectorstore = FAISS.from_documents(docs, embedding_model)
     return vectorstore
 
