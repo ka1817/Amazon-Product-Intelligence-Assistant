@@ -1,4 +1,5 @@
-🛍️ Product Search Assistant
+## 🛍️ Product Search Assistant
+
 A FastAPI-powered web app that allows users to query a product dataset using natural language. The app refines queries, retrieves relevant product information using vector similarity search, and generates helpful answers using LLMs.
 
 🚀 Features
