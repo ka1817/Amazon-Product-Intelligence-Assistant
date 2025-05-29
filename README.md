@@ -1,6 +1,6 @@
 ## 🛍️ Product Search Assistant
 
-A FastAPI-powered web app that allows users to query a product dataset using natural language. The app refines queries, retrieves relevant product information using vector similarity search, and generates helpful answers using LLMs.
+A FastAPI-powered web app that allows users to query a product dataset using natural language. The app refines queries, retrieves relevant product information using vector similarity search, and generates helpful answers using Large Language Models.
 
 🚀 Features
 🔍 Query Rewriting using LLMs (via Groq's gemma2-9b-it)
