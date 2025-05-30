@@ -1,43 +1,33 @@
-# Stage 1: Build dependencies
-FROM python:3.11-slim AS builder
-
-# Install build dependencies only for building wheels
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    g++ \
-    libffi-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-
-# Upgrade pip and install requirements in a venv
-COPY requirements.txt .
-RUN python -m venv /venv && \
-    . /venv/bin/activate && \
-    pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
-
-# Stage 2: Minimal runtime image
 FROM python:3.11-slim
 
-ENV VIRTUAL_ENV=/venv
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+# Create non-root user
+RUN useradd -m appuser
+
+# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Create a non-root user (optional for security)
-RUN useradd -m appuser
-
-# Copy virtual environment from builder
-COPY --from=builder /venv /venv
-
-# Set working directory
 WORKDIR /app
 
-# Copy application source code
-COPY . .
+# Install only build essentials
+RUN apt-get update && apt-get install -y \
+    gcc g++ libffi-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Use non-root user (optional for better security)
+# Copy and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy only necessary source code
+COPY data ./data
+COPY src ./src
+COPY main.py .
+COPY .env .env
+COPY templates ./templates
+COPY static ./static
+
+# Use non-root user
 USER appuser
 
 EXPOSE 8000
