@@ -7,11 +7,9 @@ from src.retrival_genaration import ingestdata, generation, query_rewriting
 
 app = FastAPI()
 
-# Mount static and templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# Load vectorstore and chain at startup
 vstore = ingestdata()
 chain = generation(vstore)
 
