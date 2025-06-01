@@ -9,6 +9,5 @@ def data_preprocess():
     docs = [Document(page_content=row["content"]) for _, row in df.iterrows()]
     return docs
 
-# Optional: for debug
 if __name__ == "__main__":
     print(data_preprocess())

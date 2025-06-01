@@ -47,7 +47,7 @@ def generation(vstore):
     """
 
     prompt = ChatPromptTemplate.from_template(PRODUCT_BOT_TEMPLATE)
-    llm = ChatGroq(api_key=GROQ_API_KEY, model="llama-3.3-70b-versatile")  # use correct model name
+    llm = ChatGroq(api_key=GROQ_API_KEY, model="llama-3.3-70b-versatile") 
 
     chain = (
         {"context": retriever, "question": RunnablePassthrough()}
