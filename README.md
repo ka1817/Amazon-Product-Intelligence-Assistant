@@ -19,7 +19,6 @@ By integrating query rewriting, vector similarity search, and large language mod
 
 ---
 
-```markdown
 # 🛍️ Amazon Product Intelligence Assistant
 
 A FastAPI-powered web app that allows users to query a product dataset using **natural language**. This system refines queries, retrieves relevant product data using vector similarity search (FAISS), and generates contextually accurate answers using **Large Language Models** (LLMs).
@@ -42,7 +41,7 @@ A FastAPI-powered web app that allows users to query a product dataset using **n
 
 ## 📁 Project Structure
 
-```
+```bash
 Amazon-Product-Intelligence-Assistant/
 │
 ├── .github/workflows/        # GitHub Actions for CI/CD
@@ -182,8 +181,5 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 [MIT](LICENSE)
 
-```
-
 ---
-
 Developed By Pranav Reddy
