@@ -157,7 +157,8 @@ sudo systemctl enable docker
 
 ```bash
 docker pull pranavreddy123/product-assistent
-docker run -d -p 80:8000 pranavreddy123/product-assistent
+# Ensure your .env file is in the same directory, or create an API key using Groq Cloud and add it to the .env file
+docker run -d --env-file .env -p 8000:8000 pranavreddy123/product-assistent
 ```
 
 Access your app via `http://<your-ec2-public-ip>`
